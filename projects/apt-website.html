@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Apt Website — Lotto 235 Garbatella — Luca Negri</title>
+  <meta name="description" content="A production direct-booking platform for a Rome vacation rental: Stripe payments, iCal availability, Italian compliance, self check-in and smart-lock access.">
+  <meta name="theme-color" content="#070a12">
+  <meta property="og:title" content="Apt Website — Lotto 235 Garbatella">
+  <meta property="og:description" content="Production Flask booking platform with payments, compliance and smart access.">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://negriluca.github.io/assets/img/og-card.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="../index.html" aria-label="Luca Negri — home">
+        <span class="brand-mark">LN</span>
+        <span>Luca Negri <small>/ data &amp; product</small></span>
+      </a>
+      <button class="nav-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="site-links"><span></span></button>
+      <nav class="nav-links" id="site-links" aria-label="Main navigation">
+        <a href="../index.html#projects">Projects</a>
+        <a href="../index.html#about">About</a>
+        <a href="../index.html#contact">Contact</a>
+        <a class="nav-cta" href="https://github.com/NegriLuca/apt-website" target="_blank" rel="noopener">Code ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="page-hero">
+      <div class="container">
+        <div class="breadcrumb"><a href="../index.html">Home</a><span>/</span><a href="../index.html#projects">Projects</a><span>/</span><span>Apt Website</span></div>
+        <span class="eyebrow">Full-stack product · Production</span>
+        <h1>Lotto 235 Garbatella</h1>
+        <p class="lede">
+          A direct-booking website for a vacation rental in Rome — and the operations system behind it.
+          Guests pick dates, see dynamic pricing and pay by card or bank transfer. The platform handles
+          the rest: availability sync, Italian tourist compliance, self check-in, receipts and
+          time-windowed smart-lock access.
+        </p>
+        <div class="page-meta">
+          <span class="tag accent">Flask 3.1</span>
+          <span class="tag">SQLAlchemy 2</span>
+          <span class="tag">Stripe</span>
+          <span class="tag">APScheduler</span>
+          <span class="tag">Babel · 5 locales</span>
+          <span class="tag">Docker</span>
+        </div>
+        <div class="page-actions">
+          <a class="btn btn-primary" href="https://github.com/NegriLuca/apt-website" target="_blank" rel="noopener">View repository ↗</a>
+          <a class="btn btn-ghost" href="#architecture">Architecture ↓</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-bottom:0">
+      <div class="container">
+        <div class="gallery reveal">
+          <img src="../assets/img/apt/Soggiorno_4.webp" alt="Living room with sofa and dining area" loading="lazy">
+          <img src="../assets/img/apt/Cucina_1.webp" alt="Kitchen with appliances" loading="lazy">
+          <img src="../assets/img/apt/Camera_1.webp" alt="Bedroom" loading="lazy">
+          <img src="../assets/img/apt/Bagno_1.webp" alt="Bathroom" loading="lazy">
+          <img src="../assets/img/apt/Palazzo_1.webp" alt="Building exterior" loading="lazy">
+        </div>
+
+        <div class="kpis reveal" style="margin-top:28px">
+          <div class="kpi">
+            <div class="kpi-value">5</div>
+            <div class="kpi-label">languages</div>
+            <div class="kpi-hint">EN · IT · DE · FR · ES</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-value">3</div>
+            <div class="kpi-label">compliance systems</div>
+            <div class="kpi-hint">Questura · ROSS1000 · tourist tax</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-value">2</div>
+            <div class="kpi-label">payment paths</div>
+            <div class="kpi-hint">Stripe checkout · bank transfer</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-value">24/7</div>
+            <div class="kpi-label">self check-in</div>
+            <div class="kpi-hint">token link + MRZ OCR</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="split">
+          <div class="story reveal">
+            <div class="section-kicker">The brief</div>
+            <h2 class="section-title" style="font-size:clamp(1.6rem,2.8vw,2.1rem);margin-bottom:16px">Not a landing page. An operating system for one apartment.</h2>
+            <p>
+              The goal was to replace the patchwork of OTA dashboards, spreadsheets and manual messages
+              with a single source of truth. A booking has to survive the full lifecycle: availability
+              check, pricing, payment, invoice, guest identity, compliance filings, access credentials,
+              cleaning and cancellation.
+            </p>
+            <p>
+              The public site is deliberately small. Most of the work is in the admin panel and the
+              background jobs that keep calendars, payments and legal obligations in sync — idempotently,
+              because two webhooks or a retried cron must not create two receipts.
+            </p>
+            <div class="callout" style="margin-top:20px">
+              <strong>Design rule:</strong> the database is the availability source of truth; external
+              calendars and payment providers are synced into it, never queried at booking time.
+            </div>
+          </div>
+          <div class="reveal">
+            <div class="section-kicker">Feature map</div>
+            <div class="feature-grid" style="grid-template-columns:1fr 1fr">
+              <div class="feature">
+                <div class="icon">€</div>
+                <h3>Direct booking</h3>
+                <p>Date and guest picker, weekend/holiday surcharges, extra-guest fees, weekly discounts and coupons.</p>
+              </div>
+              <div class="feature">
+                <div class="icon">◈</div>
+                <h3>Payments</h3>
+                <p>Stripe Checkout with full-payment discount or deposit, balance invoices and refunds on cancellation.</p>
+              </div>
+              <div class="feature">
+                <div class="icon">▤</div>
+                <h3>Availability</h3>
+                <p>iCal import from Airbnb, Booking and VRBO, calendar blocks and orphan cleanup.</p>
+              </div>
+              <div class="feature">
+                <div class="icon">§</div>
+                <h3>Compliance</h3>
+                <p>Questura AlloggiatiWeb SOAP, ROSS1000 Lazio, tourist tax and progressive-numbered receipts.</p>
+              </div>
+              <div class="feature">
+                <div class="icon">⚿</div>
+                <h3>Smart access</h3>
+                <p>Shelly gate relay, Nuki door and temporary keypad PINs scoped to each reservation window.</p>
+              </div>
+              <div class="feature">
+                <div class="icon">↻</div>
+                <h3>Operations</h3>
+                <p>Scheduled sync, balance invoices, cleaning links, keypad revocation, daily filings and boiler control.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="architecture">
+      <div class="container">
+        <div class="section-kicker reveal">Architecture</div>
+        <div class="section-head reveal">
+          <div><h2 class="section-title">One Flask app, many scheduled edges.</h2></div>
+          <p>An application factory keeps the web process, CLI tasks and scheduler sharing the same services and models.</p>
+        </div>
+
+        <div class="arch reveal">
+          <div class="arch-node"><span class="mono">CLIENT</span><strong>Guest site</strong><span>Booking · check-in · info</span></div>
+          <div class="arch-node"><span class="mono">CLIENT</span><strong>Admin panel</strong><span>Calendar · finance · compliance</span></div>
+          <div class="arch-node"><span class="mono">APP</span><strong>Flask + Babel</strong><span>Routes · forms · 5 locales</span></div>
+          <div class="arch-node"><span class="mono">APP</span><strong>Services</strong><span>Pricing · payments · access</span></div>
+          <div class="arch-node"><span class="mono">DATA</span><strong>SQLAlchemy</strong><span>Reservations · guests · audit</span></div>
+          <div class="arch-node"><span class="mono">DATA</span><strong>APScheduler</strong><span>Sync · invoices · filings</span></div>
+          <div class="arch-node"><span class="mono">EXTERNAL</span><strong>Stripe · Brevo</strong><span>Payments · email</span></div>
+          <div class="arch-node"><span class="mono">EXTERNAL</span><strong>iCal · Questura · ROSS1000</strong><span>Calendars · compliance</span></div>
+        </div>
+
+        <div class="split" style="margin-top:44px">
+          <div class="story reveal">
+            <div class="section-kicker">Hard parts</div>
+            <h3 style="margin-bottom:14px">What made it interesting</h3>
+            <ul class="steps">
+              <li class="step"><h3>Idempotent side effects</h3><p>Webhooks, cron jobs and retries can overlap. Receipts, filings and invoices are keyed so the same event cannot be applied twice.</p></li>
+              <li class="step"><h3>Guest identity</h3><p>Self check-in collects every Questura field, including companions. Passport/ID documents go through a dual MRZ OCR path (CNN + Tesseract).</p></li>
+              <li class="step"><h3>Time windows</h3><p>Access links and keypad PINs are valid only around the reservation, with revocation and cleaning-share links as separate scopes.</p></li>
+              <li class="step"><h3>Legal output</h3><p>Tourist tax is computed per adult/night with exemptions and caps; receipts carry progressive numbering and the correct stamp duty.</p></li>
+            </ul>
+          </div>
+          <div class="reveal">
+            <div class="section-kicker">Stack</div>
+            <div class="skill-block">
+              <h3>Backend</h3>
+              <div class="tags">
+                <span class="tag">Python</span><span class="tag">Flask</span><span class="tag">SQLAlchemy</span>
+                <span class="tag">Alembic</span><span class="tag">APScheduler</span><span class="tag">Babel</span>
+                <span class="tag">Gunicorn</span>
+              </div>
+            </div>
+            <div class="skill-block">
+              <h3>Integrations</h3>
+              <div class="tags">
+                <span class="tag">Stripe</span><span class="tag">Brevo</span><span class="tag">iCal</span>
+                <span class="tag">Questura SOAP</span><span class="tag">ROSS1000</span>
+                <span class="tag">Shelly Cloud</span><span class="tag">Nuki Web API</span>
+              </div>
+            </div>
+            <div class="skill-block">
+              <h3>Delivery</h3>
+              <div class="tags">
+                <span class="tag">Docker</span><span class="tag">Railway</span><span class="tag">pytest</span>
+                <span class="tag">ruff</span><span class="tag">GitHub</span>
+              </div>
+            </div>
+            <div class="callout" style="margin-top:16px">
+              <strong>Repository:</strong> the code is public; production secrets and guest data are not.
+              <br><a href="https://github.com/NegriLuca/apt-website" target="_blank" rel="noopener" style="color:#6ea8fe">github.com/NegriLuca/apt-website ↗</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <a class="brand" href="../index.html"><span class="brand-mark">LN</span><span>Luca Negri</span></a>
+        <p class="footer-note" style="margin:10px 0 0">Data &amp; product engineering · Rome, Italy</p>
+      </div>
+      <div class="footer-links">
+        <a href="../index.html#projects">All projects</a>
+        <a href="travel-insights.html">Travel Insights</a>
+        <a href="codice-immobiliare.html">Codice Immobiliare</a>
+        <a href="https://github.com/NegriLuca/apt-website" target="_blank" rel="noopener">Repository ↗</a>
+      </div>
+    </div>
+    <div class="container" style="margin-top:26px">
+      <p class="footer-note">© <span data-year>2026</span> Luca Negri · Apt Website</p>
+    </div>
+  </footer>
+
+  <script src="../assets/js/main.js" defer></script>
+</body>
+</html>

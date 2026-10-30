@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Travel Insights — Luca Negri</title>
+  <meta name="description" content="Scraping and analysing 2,051 travel packages from four Italian catalogues: destinations, trip vibes and itinerary depth in an interactive dashboard.">
+  <meta name="theme-color" content="#070a12">
+  <meta property="og:title" content="Travel Insights — Luca Negri">
+  <meta property="og:description" content="2,051 travel packages from four catalogues, normalised and turned into an interactive market dashboard.">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://negriluca.github.io/assets/img/og-card.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="../index.html" aria-label="Luca Negri — home">
+        <span class="brand-mark">LN</span>
+        <span>Luca Negri <small>/ data &amp; product</small></span>
+      </a>
+      <button class="nav-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="site-links"><span></span></button>
+      <nav class="nav-links" id="site-links" aria-label="Main navigation">
+        <a href="../index.html#projects">Projects</a>
+        <a href="../index.html#about">About</a>
+        <a href="../index.html#contact">Contact</a>
+        <a class="nav-cta" href="https://github.com/NegriLuca/travel-insights" target="_blank" rel="noopener">Code ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="page-hero">
+      <div class="container">
+        <div class="breadcrumb"><a href="../index.html">Home</a><span>/</span><a href="../index.html#projects">Projects</a><span>/</span><span>Travel Insights</span></div>
+        <span class="eyebrow">Data engineering · Analytics</span>
+        <h1>Travel Insights</h1>
+        <p class="lede">
+          Four Italian travel operators, four different website structures, one messy question:
+          <strong>what is the market actually selling?</strong> This project scrapes the catalogues,
+          normalises destinations and trip metadata, and turns the result into an interactive
+          dashboard — 2,051 packages, 117 resolved countries, zero manual spreadsheets.
+        </p>
+        <div class="page-meta">
+          <span class="tag accent">Python</span>
+          <span class="tag">Selenium</span>
+          <span class="tag">BeautifulSoup</span>
+          <span class="tag">pandas</span>
+          <span class="tag">Plotly</span>
+          <span class="tag">GitHub Pages</span>
+        </div>
+        <div class="page-actions">
+          <a class="btn btn-primary" href="#dashboard">Open dashboard <span class="arrow">↓</span></a>
+          <a class="btn btn-ghost" href="https://github.com/NegriLuca/travel-insights" target="_blank" rel="noopener">Repository ↗</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-bottom:0">
+      <div class="container">
+        <div class="kpis reveal">
+          <div class="kpi">
+            <div class="kpi-value" id="kpi-trips">2,051</div>
+            <div class="kpi-label">travel packages</div>
+            <div class="kpi-hint">from 4 catalogues</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-value" id="kpi-countries">117</div>
+            <div class="kpi-label">resolved countries</div>
+            <div class="kpi-hint"><span id="kpi-coverage">94.4%</span> of trips resolved</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-value" id="kpi-days">11</div>
+            <div class="kpi-label">median trip length</div>
+            <div class="kpi-hint">days per package</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-value" id="kpi-words">467</div>
+            <div class="kpi-label">median description</div>
+            <div class="kpi-hint">words per package</div>
+          </div>
+        </div>
+
+        <div class="split" style="margin-top:56px">
+          <div class="story reveal">
+            <div class="section-kicker">The problem</div>
+            <h2 class="section-title" style="font-size:clamp(1.6rem,2.8vw,2.1rem);margin-bottom:16px">Every catalogue speaks a different dialect.</h2>
+            <p>
+              One operator exposes a clean <code>Country</code> field. Another returns a list of
+              countries and macro-regions. A third stores destinations as marketing collections
+              (“Hai voglia di vibes da isola?”) and puts the real country in the subtitle. The
+              itineraries arrive as JSON strings, nested dicts or plain prose.
+            </p>
+            <p>
+              The pipeline treats the catalogues as <strong>raw inputs</strong>: it normalises
+              country names and aliases, maps destinations to continents, extracts trip length and
+              content depth, and tags each package with a small set of travel vibes. Everything
+              ships as one JSON payload consumed by the dashboard.
+            </p>
+            <div class="callout" style="margin-top:20px">
+              <strong>Result:</strong> 94.4% of packages resolve to a country, with a documented
+              fallback for the remaining 5.6% instead of silently dropping them.
+            </div>
+          </div>
+          <div class="reveal">
+            <div class="section-kicker">Pipeline</div>
+            <div class="steps">
+              <div class="step">
+                <h3>Scrape</h3>
+                <p>Selenium and requests/trafilatura collectors for WeRoad, SiVola, ViaggiAvventure and FourSeasons.</p>
+              </div>
+              <div class="step">
+                <h3>Normalise</h3>
+                <p>Country aliases, macro-regions, lists, marketing labels, currencies and malformed fields.</p>
+              </div>
+              <div class="step">
+                <h3>Enrich</h3>
+                <p>Itinerary length, description depth, structured-itinerary coverage and vibe tags.</p>
+              </div>
+              <div class="step">
+                <h3>Publish</h3>
+                <p>A compact JSON payload rendered with Plotly on a static GitHub Pages site.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="dashboard">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <div class="section-kicker">The dashboard</div>
+            <h2 class="section-title">What the catalogues are selling.</h2>
+          </div>
+          <p>All charts are interactive. Hover for exact values; use the table to search individual packages.</p>
+        </div>
+
+        <div class="chart-grid two">
+          <div class="chart-card reveal">
+            <h3>Packages per operator</h3>
+            <div class="chart-sub">The dataset is dominated by ViaggiAvventure.</div>
+            <div class="chart" id="chart-operators"></div>
+          </div>
+          <div class="chart-card reveal">
+            <h3>Trips by region</h3>
+            <div class="chart-sub">Europe and Asia are almost tied; Oceania is a niche.</div>
+            <div class="chart" id="chart-regions"></div>
+          </div>
+          <div class="chart-card reveal">
+            <h3>Top destinations</h3>
+            <div class="chart-sub">Resolved countries, coloured by continent.</div>
+            <div class="chart tall" id="chart-countries"></div>
+          </div>
+          <div class="chart-card reveal">
+            <h3>Trip vibes × operator</h3>
+            <div class="chart-sub">Packages tagged per vibe (titles, subtitles and mood fields).</div>
+            <div class="chart tall" id="chart-vibes"></div>
+          </div>
+          <div class="chart-card reveal">
+            <h3>Itinerary length</h3>
+            <div class="chart-sub">Distribution of trip duration in days (15+ grouped).</div>
+            <div class="chart" id="chart-days"></div>
+          </div>
+          <div class="chart-card reveal">
+            <h3>Content depth vs trip length</h3>
+            <div class="chart-sub">Longer trips tend to get richer descriptions — with outliers.</div>
+            <div class="chart" id="chart-words"></div>
+          </div>
+        </div>
+
+        <div class="section-head reveal" style="margin-top:56px;margin-bottom:18px">
+          <div>
+            <div class="section-kicker">Operator comparison</div>
+            <h3 class="section-title" style="font-size:clamp(1.4rem,2.4vw,1.9rem)">Who publishes what</h3>
+          </div>
+        </div>
+        <div class="table-card reveal">
+          <div class="table-wrap" style="max-height:none">
+            <table>
+              <thead>
+                <tr>
+                  <th>Operator</th>
+                  <th>Packages</th>
+                  <th>Countries</th>
+                  <th>Median days</th>
+                  <th>Median words</th>
+                  <th>Day-by-day</th>
+                  <th>Top destination</th>
+                  <th>Top vibe</th>
+                </tr>
+              </thead>
+              <tbody id="operator-table"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:0">
+      <div class="container">
+        <div class="section-head reveal" style="margin-bottom:18px">
+          <div>
+            <div class="section-kicker">Explore</div>
+            <h3 class="section-title" style="font-size:clamp(1.4rem,2.4vw,1.9rem)">All 2,051 packages</h3>
+          </div>
+          <p>Filter by operator, region or name. Links open the original operator page.</p>
+        </div>
+
+        <div class="table-card reveal">
+          <div class="table-toolbar">
+            <div class="filters">
+              <input class="input" id="trip-search" type="search" placeholder="Search a trip…" aria-label="Search trips">
+              <select class="select" id="trip-operator" aria-label="Filter by operator">
+                <option value="">All operators</option>
+              </select>
+              <select class="select" id="trip-region" aria-label="Filter by region">
+                <option value="">All regions</option>
+              </select>
+            </div>
+            <div class="result-count" id="trip-count">—</div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Trip</th>
+                  <th>Operator</th>
+                  <th>Destination</th>
+                  <th>Region</th>
+                  <th>Days</th>
+                </tr>
+              </thead>
+              <tbody id="trip-table"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="callout reveal" style="margin-top:24px">
+          <strong>Data note.</strong> The catalogues are a May 2024 snapshot. Country resolution is
+          best-effort: a package may legitimately span several countries, and marketing collections
+          are mapped to the first concrete country found (or left as “Non specificato”). The code,
+          raw pickles and normalisation rules are in the repository so the result is reproducible.
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <a class="brand" href="../index.html"><span class="brand-mark">LN</span><span>Luca Negri</span></a>
+        <p class="footer-note" style="margin:10px 0 0">Data &amp; product engineering · Rome, Italy</p>
+      </div>
+      <div class="footer-links">
+        <a href="../index.html#projects">All projects</a>
+        <a href="apt-website.html">Apt Website</a>
+        <a href="codice-immobiliare.html">Codice Immobiliare</a>
+        <a href="https://github.com/NegriLuca/travel-insights" target="_blank" rel="noopener">Repository ↗</a>
+      </div>
+    </div>
+    <div class="container" style="margin-top:26px">
+      <p class="footer-note">© <span data-year>2026</span> Luca Negri · Travel Insights</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+  <script src="../assets/js/main.js" defer></script>
+  <script>
+    (() => {
+      const DATA_URL = '../assets/data/travel_insights.json';
+      const PALETTE = ['#6ea8fe', '#4fd1a5', '#b388ff', '#ff8a5b', '#f2c14e'];
+      const BASE = {
+        paper_bgcolor: 'rgba(0,0,0,0)',
+        plot_bgcolor: 'rgba(0,0,0,0)',
+        font: { family: 'Inter, system-ui, sans-serif', color: '#95a2bb', size: 12 },
+        margin: { l: 12, r: 18, t: 12, b: 42 },
+        hoverlabel: {
+          bgcolor: '#121a2c',
+          bordercolor: 'rgba(151,168,197,.35)',
+          font: { color: '#e9eef9', family: 'Inter, sans-serif' }
+        },
+        xaxis: { gridcolor: 'rgba(151,168,197,.1)', zeroline: false, linecolor: 'rgba(151,168,197,.18)', tickfont: { color: '#7d8aa5' } },
+        yaxis: { gridcolor: 'rgba(151,168,197,.1)', zeroline: false, linecolor: 'rgba(151,168,197,.18)', tickfont: { color: '#7d8aa5' } }
+      };
+      const CONFIG = { responsive: true, displayModeBar: false };
+      const fmt = (n) => Number(n).toLocaleString('en-US');
+      const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+      const regionColor = {};
+      const operatorColor = {};
+
+      function chart(id, traces, layout) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        Plotly.newPlot(el, traces, { ...BASE, ...layout, autosize: true }, CONFIG);
+      }
+
+      function render(data) {
+        const { meta, operators, top_countries, vibes, days_hist, trips } = data;
+        const operatorLabels = operators.map((o) => o.label);
+        operatorLabels.forEach((label, i) => { operatorColor[label] = PALETTE[i % PALETTE.length]; });
+        meta.regions.forEach((r) => { regionColor[r.region] = r.color; });
+
+        document.getElementById('kpi-trips').textContent = fmt(meta.trips);
+        document.getElementById('kpi-countries').textContent = fmt(meta.countries);
+        document.getElementById('kpi-coverage').textContent = meta.destination_coverage + '%';
+        document.getElementById('kpi-days').textContent = meta.median_days ?? '—';
+        document.getElementById('kpi-words').textContent = fmt(meta.median_words ?? 0);
+
+        chart('chart-operators', [{
+          type: 'bar',
+          orientation: 'h',
+          x: operators.map((o) => o.trips),
+          y: operators.map((o) => o.label),
+          marker: { color: operators.map((o) => operatorColor[o.label]), line: { width: 0 } },
+          text: operators.map((o) => fmt(o.trips)),
+          textposition: 'outside',
+          textfont: { color: '#c7d3e8' },
+          cliponaxis: false,
+          hovertemplate: '%{y}: %{x:,} packages<extra></extra>'
+        }], {
+          margin: { l: 118, r: 54, t: 10, b: 34 },
+          xaxis: { ...BASE.xaxis, showgrid: false, rangemode: 'tozero' },
+          yaxis: { ...BASE.yaxis, showgrid: false, autorange: 'reversed' },
+          bargap: 0.42
+        });
+
+        chart('chart-regions', [{
+          type: 'pie',
+          hole: 0.64,
+          labels: meta.regions.map((r) => r.region),
+          values: meta.regions.map((r) => r.trips),
+          marker: { colors: meta.regions.map((r) => r.color), line: { color: '#0b1120', width: 2 } },
+          textinfo: 'percent',
+          textfont: { color: '#e9eef9', size: 12 },
+          hovertemplate: '%{label}: %{value:,} trips (%{percent})<extra></extra>'
+        }], {
+          margin: { l: 8, r: 8, t: 8, b: 8 },
+          annotations: [{
+            text: `<b style="font-size:22px;color:#e9eef9">${fmt(meta.trips)}</b><br><span style="font-size:11px;color:#7d8aa5">packages</span>`,
+            showarrow: false,
+            font: { color: '#e9eef9' }
+          }],
+          showlegend: true,
+          legend: { orientation: 'h', y: -0.08, font: { size: 11 } }
+        });
+
+        const top = top_countries.slice(0, 15);
+        chart('chart-countries', [{
+          type: 'bar',
+          orientation: 'h',
+          x: top.map((c) => c.trips),
+          y: top.map((c) => c.country),
+          marker: { color: top.map((c) => regionColor[c.region] || '#8b93a7') },
+          text: top.map((c) => fmt(c.trips)),
+          textposition: 'outside',
+          textfont: { color: '#c7d3e8', size: 11 },
+          cliponaxis: false,
+          customdata: top.map((c) => c.region),
+          hovertemplate: '%{y} · %{x:,} packages · %{customdata}<extra></extra>'
+        }], {
+          margin: { l: 128, r: 54, t: 8, b: 34 },
+          xaxis: { ...BASE.xaxis, showgrid: false, rangemode: 'tozero' },
+          yaxis: { ...BASE.yaxis, showgrid: false, autorange: 'reversed' },
+          bargap: 0.3
+        });
+
+        const vibeLabels = vibes.map((v) => v.vibe);
+        const z = vibeLabels.map((vibe) => operatorLabels.map((label) => {
+          const row = vibes.find((v) => v.vibe === vibe);
+          return row ? row.by_operator[label] || 0 : 0;
+        }));
+        chart('chart-vibes', [{
+          type: 'heatmap',
+          x: operatorLabels,
+          y: vibeLabels,
+          z,
+          colorscale: [[0, '#0d1424'], [0.25, '#17305a'], [0.55, '#3567b8'], [0.8, '#5b9dff'], [1, '#6ef0c6']],
+          text: z.map((row) => row.map((v) => fmt(v))),
+          texttemplate: '%{text}',
+          textfont: { size: 10, color: '#e9eef9' },
+          showscale: false,
+          hovertemplate: '%{y} · %{x}: %{z:,} packages<extra></extra>',
+          xgap: 4,
+          ygap: 4
+        }], {
+          margin: { l: 112, r: 12, t: 8, b: 34 },
+          xaxis: { ...BASE.xaxis, showgrid: false, tickfont: { color: '#c7d3e8', size: 11 } },
+          yaxis: { ...BASE.yaxis, showgrid: false, autorange: 'reversed' }
+        });
+
+        const dayLabels = [...new Set(days_hist.map((d) => d.days))].sort((a, b) => a - b).map((d) => d === 15 ? '15+' : String(d));
+        const dayTraces = operators.map((op) => ({
+          type: 'bar',
+          name: op.label,
+          x: [...new Set(days_hist.map((d) => d.days))].sort((a, b) => a - b).map((d) => d === 15 ? '15+' : String(d)),
+          y: [...new Set(days_hist.map((d) => d.days))].sort((a, b) => a - b).map((d) => {
+            const row = days_hist.find((h) => h.operator === op.label && h.days === d);
+            return row ? row.trips : 0;
+          }),
+          marker: { color: operatorColor[op.label] },
+          hovertemplate: `${op.label} · %{x} days: %{y:,}<extra></extra>`
+        }));
+        chart('chart-days', dayTraces, {
+          barmode: 'group',
+          bargap: 0.28,
+          margin: { l: 42, r: 12, t: 8, b: 42 },
+          legend: { orientation: 'h', y: 1.12, font: { size: 11 } },
+          xaxis: { ...BASE.xaxis, title: { text: 'days', font: { size: 11, color: '#66738c' } }, categoryorder: 'array', categoryarray: dayLabels },
+          yaxis: { ...BASE.yaxis, showgrid: true, rangemode: 'tozero' }
+        });
+
+        const scatterTraces = operators.map((op) => {
+          const rows = trips.filter((t) => t.operator === op.label && t.days && t.words && t.words < 2000);
+          return {
+            type: 'scatter',
+            mode: 'markers',
+            name: op.label,
+            x: rows.map((t) => t.days),
+            y: rows.map((t) => t.words),
+            marker: { color: operatorColor[op.label], size: 5, opacity: 0.55 },
+            hovertemplate: `${op.label}<br>%{x} days · %{y:,} words<extra></extra>`
+          };
+        });
+        chart('chart-words', scatterTraces, {
+          margin: { l: 52, r: 12, t: 8, b: 42 },
+          legend: { orientation: 'h', y: 1.12, font: { size: 11 } },
+          xaxis: { ...BASE.xaxis, title: { text: 'trip length (days)', font: { size: 11, color: '#66738c' } } },
+          yaxis: { ...BASE.yaxis, title: { text: 'description words', font: { size: 11, color: '#66738c' } }, type: 'log' }
+        });
+
+        const opBody = document.getElementById('operator-table');
+        opBody.innerHTML = operators.map((o) => `
+          <tr>
+            <td class="name"><span class="pill"><span class="dot" style="background:${operatorColor[o.label]}"></span>${esc(o.label)}</span></td>
+            <td>${fmt(o.trips)}</td>
+            <td>${fmt(o.countries)}</td>
+            <td class="days-cell">${o.median_days ?? '—'}</td>
+            <td class="days-cell">${fmt(o.median_words ?? 0)}</td>
+            <td class="days-cell">${o.itinerary_coverage ?? '—'}%</td>
+            <td>${esc(o.top_country)}</td>
+            <td>${esc(o.top_vibe)}</td>
+          </tr>
+        `).join('');
+
+        const opSelect = document.getElementById('trip-operator');
+        operatorLabels.forEach((label) => {
+          const option = document.createElement('option');
+          option.value = label;
+          option.textContent = label;
+          opSelect.appendChild(option);
+        });
+        const regionSelect = document.getElementById('trip-region');
+        meta.regions.forEach((r) => {
+          const option = document.createElement('option');
+          option.value = r.region;
+          option.textContent = r.region;
+          regionSelect.appendChild(option);
+        });
+
+        const tbody = document.getElementById('trip-table');
+        const countEl = document.getElementById('trip-count');
+        const searchEl = document.getElementById('trip-search');
+        let rendered = 0;
+
+        function renderTable() {
+          const q = searchEl.value.trim().toLowerCase();
+          const op = opSelect.value;
+          const region = regionSelect.value;
+          const rows = trips.filter((t) => {
+            if (op && t.operator !== op) return false;
+            if (region && t.region !== region) return false;
+            if (q && !t.name.toLowerCase().includes(q) && !t.country.toLowerCase().includes(q)) return false;
+            return true;
+          });
+          const limit = 400;
+          const shown = rows.slice(0, limit);
+          tbody.innerHTML = shown.length ? shown.map((t) => {
+            const name = t.url
+              ? `<a href="${esc(t.url)}" target="_blank" rel="noopener">${esc(t.name)}</a>`
+              : esc(t.name);
+            const dot = regionColor[t.region] || '#8b93a7';
+            return `<tr>
+              <td class="name">${name}</td>
+              <td><span class="pill"><span class="dot" style="background:${operatorColor[t.operator] || '#6ea8fe'}"></span>${esc(t.operator)}</span></td>
+              <td>${esc(t.country)}</td>
+              <td><span class="pill"><span class="dot" style="background:${dot}"></span>${esc(t.region)}</span></td>
+              <td class="days-cell">${t.days ?? '—'}</td>
+            </tr>`;
+          }).join('') : '<tr class="empty-row"><td colspan="5">No trips match these filters.</td></tr>';
+          rendered = shown.length;
+          countEl.textContent = rows.length > limit
+            ? `showing ${fmt(limit)} of ${fmt(rows.length)} trips`
+            : `${fmt(rows.length)} trips`;
+        }
+
+        searchEl.addEventListener('input', renderTable);
+        opSelect.addEventListener('change', renderTable);
+        regionSelect.addEventListener('change', renderTable);
+        renderTable();
+
+        // Re-layout charts once fonts are ready.
+        if (document.fonts && document.fonts.ready) {
+          document.fonts.ready.then(() => {
+            document.querySelectorAll('.chart').forEach((el) => { if (el.data) Plotly.Plots.resize(el); });
+          });
+        }
+      }
+
+      fetch(DATA_URL)
+        .then((res) => { if (!res.ok) throw new Error('HTTP ' + res.status); return res.json(); })
+        .then(render)
+        .catch((err) => {
+          console.error(err);
+          document.querySelectorAll('.chart').forEach((el) => {
+            el.innerHTML = '<p style="color:#95a2bb;padding:20px">Could not load dashboard data.</p>';
+          });
+        });
+    })();
+  </script>
+</body>
+</html>

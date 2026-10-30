@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://negriluca.github.io/sitemap.xml
